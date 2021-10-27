@@ -4,13 +4,14 @@ class CardContainer extends StatelessWidget {
   final Widget child;
 
   const CardContainer({Key? key, required this.child}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Container(
         width: double.infinity,
-        height: 300,
+        height: 400,
         decoration: _createCardShape(),
         child: this.child,
       ),
