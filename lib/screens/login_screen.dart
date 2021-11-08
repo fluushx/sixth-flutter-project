@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:six_flutter_project/providers/login_form_provider.dart';
 import 'package:six_flutter_project/screens/screens.dart';
+import 'package:six_flutter_project/services/services.dart';
 import 'package:six_flutter_project/ui/input_decoration.dart';
 import 'package:six_flutter_project/widgets/widgets.dart';
 
@@ -29,6 +30,20 @@ class LoginScreen extends StatelessWidget {
               ),
             ])),
             SizedBox(height: 50),
+            TextButton(
+              onPressed: () => Navigator.pushReplacementNamed(
+                  context, RegisterScreen.routeName),
+              child: Text('Crear Cuenta',
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold)),
+              style: ButtonStyle(
+                overlayColor:
+                    MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
+                shape: MaterialStateProperty.all(StadiumBorder()),
+              ),
+            )
           ]),
         ),
       ),
@@ -103,9 +118,18 @@ class _LoginForm extends StatelessWidget {
                     ? null
                     : () async {
                         FocusScope.of(context).unfocus();
+                        final authService =
+                            Provider.of<AuthService>(context, listen: false);
                         if (!loginForm.isValidForm()) return;
                         loginForm.isLoading = true;
 
+                        final String? errorMessage = await authService
+                            .loginUser(loginForm.email, loginForm.password);
+                        if (errorMessage == null) {
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        } else {
+                          print(errorMessage);
+                        }
                         Future.delayed(Duration(seconds: 6));
                         loginForm.isLoading = false;
                         Navigator.pushNamed(context, HomeScreen.routeName);
